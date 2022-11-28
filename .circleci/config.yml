@@ -373,9 +373,9 @@ jobs:
             echo $FRONTEND_URL
             if curl -s $FRONTEND_URL | grep -i "Welcome"
             then
-              exit 0
-            else
               exit 1
+            else
+              exit 2
             fi
 
       - destroy-environment
