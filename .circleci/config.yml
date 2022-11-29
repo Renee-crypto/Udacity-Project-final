@@ -402,7 +402,7 @@ jobs:
           name: get old work flow id and put is kvdb
           command: |
             export OLD_WORKFLOW_ID=$(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
-            echo "old flow id $OLD_WORKFLOW_ID"
+            echo "old flow id: $OLD_WORKFLOW_ID"
             curl https://kvdb.io/${KVDB_BUCKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
       - run:
           name: Update cloudfront distribution
@@ -410,7 +410,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-            --stack-name InitialStack
+            --stack-name initialstack
 
       - destroy-environment
       - revert-migrations
@@ -490,5 +490,5 @@ workflows:
          requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
          requires: [smoke-test]
-#      - cleanup:
-#          requires: [cloudfront-update]
+      # - cleanup:
+      #    requires: [cloudfront-update]
